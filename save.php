@@ -4,7 +4,7 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Methods: POST, GET");
 header("Access-Control-Allow-Headers: Content-Type");
 
-$host = 'sql12.freesqldatabase.com'; //
+$host = 'sql12.freesqldatabase.com'; 
 $db   = 'sql12825158';
 $user = 'sql12825158';
 $pass = 'lCgrDaY426';
