@@ -8,160 +8,71 @@
     <style>
         :root { --admin-blue: #1a237e; --sidebar-bg: #fdfdfd; --preview-bg: #2c3e50; --border-color: #222; }
         body { background-color: var(--preview-bg); margin: 0; font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; }
-
-        /* Sidebar UI */
         .sidebar { width: 380px; background: var(--sidebar-bg); padding: 25px; overflow-y: auto; box-shadow: 10px 0 20px rgba(0,0,0,0.4); z-index: 10; border-right: 1px solid #ccc; }
         .sidebar h2 { color: var(--admin-blue); font-size: 20px; border-bottom: 3px solid var(--admin-blue); padding-bottom: 8px; margin-bottom: 20px; }
         .input-group { margin-bottom: 14px; }
         .input-group label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 5px; color: #555; text-transform: uppercase; }
-        .input-group input, .input-group select { width: 100%; padding: 10px; border: 1.5px solid #d1d1d1; border-radius: 6px; font-size: 13px; box-sizing: border-box; transition: 0.3s; }
-        .input-group input:focus, .input-group select:focus { border-color: var(--admin-blue); box-shadow: 0 0 5px rgba(26,35,126,0.2); outline: none; }
-        
-        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 30px; }
+        .input-group input, .input-group select { width: 100%; padding: 10px; border: 1.5px solid #d1d1d1; border-radius: 6px; font-size: 13px; box-sizing: border-box; }
+        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
         .btn { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 800; color: white; text-transform: uppercase; font-size: 12px; transition: 0.3s; }
         .btn-pdf { background: #b71c1c; grid-column: span 2; }
+        .btn-save-db { background: #fb8c00; grid-column: span 2; margin-bottom: 5px; }
         .btn-jpg { background: #1b5e20; }
         .btn-reset { background: #455a64; }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        /* Preview Area */
         .preview-area { flex: 1; display: flex; justify-content: center; overflow-y: auto; padding: 30px; }
-
-        /* The A4 Document Design */
-        #a4-page {
-            width: 210mm;
-            height: 297mm;
-            background: white;
-            padding: 12mm;
-            box-sizing: border-box;
-            position: relative;
-            font-family: 'Times New Roman', Times, serif;
-        }
-
-        .page-border {
-            border: 2px solid var(--border-color);
-            height: 100%;
-            padding: 10mm;
-            box-sizing: border-box;
-            position: relative;
-        }
-
+        #a4-page { width: 210mm; height: 297mm; background: white; padding: 12mm; box-sizing: border-box; position: relative; font-family: 'Times New Roman', Times, serif; }
+        .page-border { border: 2px solid var(--border-color); height: 100%; padding: 10mm; box-sizing: border-box; position: relative; }
         .header { text-align: center; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
-        .header h1 { margin: 0; font-size: 32px; color: var(--admin-blue); font-weight: 900; letter-spacing: 0.5px; }
-        .header p { margin: 4px 0; font-size: 14px; font-weight: bold; color: #333; }
-
+        .header h1 { margin: 0; font-size: 32px; color: var(--admin-blue); font-weight: 900; }
         .info-photo-row { display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 15px; }
         .form-meta { width: 160px; font-size: 13px; display: flex; flex-direction: column; justify-content: flex-end; }
         .form-meta div { border-bottom: 1px solid #ddd; padding: 4px 0; }
-
-        .form-title-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .admission-title { 
-            border: 2px solid var(--border-color); 
-            padding: 8px 30px; 
-            background: #f8f8f8; 
-            font-size: 18px; 
-            font-weight: 900; 
-            text-transform: uppercase;
-            box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
-        }
-
-        .photo-box { 
-            width: 35mm; 
-            height: 42mm; 
-            border: 1.5px solid var(--border-color); 
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            font-size: 11px;
-            color: #888;
-            text-align: center;
-        }
+        .admission-title { border: 2px solid var(--border-color); padding: 8px 30px; background: #f8f8f8; font-size: 18px; font-weight: 900; text-transform: uppercase; }
+        .photo-box { width: 35mm; height: 42mm; border: 1.5px solid var(--border-color); display: flex; align-items: center; justify-content: center; text-align: center; font-size: 11px; }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; }
-
-        .section-label { 
-            background: var(--admin-blue); 
-            color: white; 
-            padding: 4px 12px; 
-            font-size: 12px; 
-            font-weight: bold; 
-            letter-spacing: 1px;
-            margin-top: 20px;
-            display: inline-block;
-        }
-
-        .data-container { border-top: 1px solid var(--border-color); padding-top: 15px; margin-top: 2px; }
+        .section-label { background: var(--admin-blue); color: white; padding: 4px 12px; font-size: 12px; font-weight: bold; margin-top: 20px; display: inline-block; }
+        .data-container { border-top: 1px solid var(--border-color); padding-top: 15px; }
         .field-row { display: flex; margin-bottom: 12px; align-items: flex-end; }
-        .field-label { font-size: 14px; font-weight: bold; width: 160px; color: #333; }
-        .field-value { flex: 1; border-bottom: 1px solid #666; font-size: 15px; font-weight: 900; padding-left: 10px; color: #000; height: 20px; }
-        
+        .field-label { font-size: 14px; font-weight: bold; width: 160px; }
+        .field-value { flex: 1; border-bottom: 1px solid #666; font-size: 15px; font-weight: 900; padding-left: 10px; height: 20px; }
         .split-row { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-
         .footer { margin-top: 70px; display: flex; justify-content: space-between; }
-        .signature-line { width: 180px; border-top: 1.5px solid var(--border-color); text-align: center; padding-top: 6px; font-size: 13px; font-weight: bold; }
+        .signature-line { width: 180px; border-top: 1.5px solid var(--border-color); text-align: center; padding-top: 6px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
         <h2>Entry Console</h2>
-        <div class="input-group"><label>Upload Photo</label><input type="file" accept="image/*" onchange="loadImg(event)"></div>
+        <div class="input-group"><label>Upload Photo</label><input type="file" onchange="loadImg(event)"></div>
         <div class="input-group"><label>Form Number</label><input type="text" oninput="up('v-fno', this.value)" placeholder="UMC-2083-001"></div>
-        <div class="input-group"><label>Date</label><input type="date" onchange="up('v-date', this.value)"></div>
+        <div class="input-group"><label>Date</label><input type="date" id="input-date" onchange="up('v-date', this.value)"></div>
         <div class="input-group"><label>Full Name</label><input type="text" oninput="up('v-name', this.value)"></div>
-        <div class="input-group">
-            <label>Gender</label>
-            <select onchange="up('v-gender', this.value)">
-                <option value="">Select</option>
-                <option>Male</option><option>Female</option><option>Other</option>
-            </select>
-        </div>
-        <div class="input-group"><label>Permanent Address</label><input type="text" oninput="up('v-padd', this.value)"></div>
-        <div class="input-group"><label>Temporary Address</label><input type="text" oninput="up('v-tadd', this.value)"></div>
+        <div class="input-group"><label>Gender</label><select onchange="up('v-gender', this.value)"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+        <div class="input-group"><label>Perm. Address</label><input type="text" oninput="up('v-padd', this.value)"></div>
+        <div class="input-group"><label>Temp. Address</label><input type="text" oninput="up('v-tadd', this.value)"></div>
         <div class="input-group"><label>Email</label><input type="email" oninput="up('v-email', this.value)"></div>
         <div class="input-group"><label>Contact No.</label><input type="text" oninput="up('v-phone', this.value)"></div>
         
-        <!-- Level Dropdown with filter function trigger -->
         <div class="input-group">
             <label>Level</label>
             <select id="levelSelect" onchange="up('v-lvl', this.value); filterYear();">
                 <option value="">Select Level</option>
-                <option value="XI">XI</option>
-                <option value="XII">XII</option>
-                <option value="Bachelor">Bachelor</option>
-                <option value="Master">Master</option>
+                <option>XI</option><option>XII</option><option>Bachelor</option><option>Master</option>
             </select>
         </div>
-
-        <div class="input-group">
-            <label>Faculty</label>
-            <select onchange="up('v-fac', this.value)">
-                <option value="">Select Faculty</option>
-                <option>Education</option>
-                <option>Management</option>
-                <option>Humanities</option>
-                <option>Science</option>
-            </select>
-        </div>
-
-        <!-- Year/Semester Dropdown -->
+        <div class="input-group"><label>Faculty</label><select onchange="up('v-fac', this.value)"><option value="">Select Faculty</option><option>Education</option><option>Management</option><option>Humanities</option><option>Science</option></select></div>
         <div class="input-group">
             <label>Year / Semester</label>
             <select id="yearSelect" onchange="up('v-yr', this.value)">
                 <option value="">Select Year/Sem</option>
-                <option class="opt-bach" value="1st Year">1st Year</option>
-                <option class="opt-bach" value="2nd Year">2nd Year</option>
-                <option class="opt-bach" value="3rd Year">3rd Year</option>
-                <option class="opt-bach" value="4th Year">4th Year</option>
-                <option class="opt-mast" value="1st Semester">1st Semester</option>
-                <option class="opt-mast" value="2nd Semester">2nd Semester</option>
-                <option class="opt-mast" value="3rd Semester">3rd Semester</option>
-                <option class="opt-mast" value="4th Semester">4th Semester</option>
+                <option class="opt-bach" value="1st Year">1st Year</option><option class="opt-bach" value="2nd Year">2nd Year</option><option class="opt-bach" value="3rd Year">3rd Year</option><option class="opt-bach" value="4th Year">4th Year</option>
+                <option class="opt-mast" value="1st Semester">1st Semester</option><option class="opt-mast" value="2nd Semester">2nd Semester</option><option class="opt-mast" value="3rd Semester">3rd Semester</option><option class="opt-mast" value="4th Semester">4th Semester</option>
             </select>
         </div>
 
         <div class="action-btns">
+            <button class="btn btn-save-db" onclick="saveData()">Save to Database</button>
             <button class="btn btn-pdf" onclick="exportA4('pdf')">Download PDF</button>
             <button class="btn btn-jpg" onclick="exportA4('jpg')">Save Image</button>
             <button class="btn btn-reset" onclick="window.location.reload()">Clear</button>
@@ -174,147 +85,104 @@
                 <div class="header">
                     <h1>URLABARI MULTIPLE CAMPUS</h1>
                     <p>Urlabari-04, Morang, Nepal | Estd: 2043</p>
-                    <p style="text-transform: uppercase;">For Computer Course-2083</p>
+                    <p style="text-transform: uppercase;">Computer Course-2083</p>
                 </div>
-
                 <div class="info-photo-row">
                     <div class="form-meta">
-                        <div><strong>Form No:</strong> <span id="v-fno" style="font-weight: bold;">_________</span></div>
-                        <div><strong>Date:</strong> <span id="v-date" style="font-weight: bold;">........................</span></div>
+                        <div><strong>Form No:</strong> <span id="v-fno">_________</span></div>
+                        <div><strong>Date:</strong> <span id="v-date">........................</span></div>
                     </div>
-                    <div class="form-title-container">
-                        <div class="admission-title">Admission Form</div>
-                    </div>
-                    <div class="photo-box" id="v-frame">Passport Size<br>Photograph</div>
+                    <div class="admission-title">Admission Form</div>
+                    <div class="photo-box" id="v-frame">Photograph</div>
                 </div>
-
                 <div class="section-label">01. Identity Details</div>
                 <div class="data-container">
-                    <div class="field-row">
-                        <div class="field-label">Full Name (Capital):</div>
-                        <div class="field-value" id="v-name">................................................................................</div>
-                    </div>
+                    <div class="field-row"><div class="field-label">Full Name:</div><div class="field-value" id="v-name">................................................</div></div>
                     <div class="split-row">
-                        <div class="field-row">
-                            <div class="field-label" style="width: 80px;">Gender:</div>
-                            <div class="field-value" id="v-gender">......................</div>
-                        </div>
-                        <div class="field-row">
-                            <div class="field-label" style="width: 100px;">Nationality:</div>
-                            <div class="field-value">Nepalese</div>
-                        </div>
+                        <div class="field-row"><div class="field-label" style="width:70px">Gender:</div><div class="field-value" id="v-gender">..........</div></div>
+                        <div class="field-row"><div class="field-label" style="width:100px">Nationality:</div><div class="field-value">Nepalese</div></div>
                     </div>
-                    <div class="field-row">
-                        <div class="field-label">Permanent Address:</div>
-                        <div class="field-value" id="v-padd">................................................................................</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-label">Temporary Address:</div>
-                        <div class="field-value" id="v-tadd">................................................................................</div>
-                    </div>
+                    <div class="field-row"><div class="field-label">Perm. Address:</div><div class="field-value" id="v-padd">................................................</div></div>
+                    <div class="field-row"><div class="field-label">Temp. Address:</div><div class="field-value" id="v-tadd">................................................</div></div>
                 </div>
-
-                <div class="section-label">02. Contact & Communication</div>
+                <div class="section-label">02. Contact Information</div>
                 <div class="data-container">
-                    <div class="field-row">
-                        <div class="field-label">Email Address:</div>
-                        <div class="field-value" id="v-email">................................................................................</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-label">Primary Contact No:</div>
-                        <div class="field-value" id="v-phone">................................................................................</div>
-                    </div>
+                    <div class="field-row"><div class="field-label">Email:</div><div class="field-value" id="v-email">................................................</div></div>
+                    <div class="field-row"><div class="field-label">Contact No:</div><div class="field-value" id="v-phone">................................................</div></div>
                 </div>
-
                 <div class="section-label">03. Academic Information</div>
                 <div class="data-container">
-                    <div class="field-row">
-                        <div class="field-label">Level:</div>
-                        <div class="field-value" id="v-lvl">................................................................................</div>
-                    </div>
+                    <div class="field-row"><div class="field-label">Level:</div><div class="field-value" id="v-lvl">................................................</div></div>
                     <div class="split-row">
-                        <div class="field-row">
-                            <div class="field-label" style="width: 80px;">Faculty:</div>
-                            <div class="field-value" id="v-fac">......................</div>
-                        </div>
-                        <div class="field-row">
-                            <div class="field-label" style="width: 110px;">Year/Semester:</div>
-                            <div class="field-value" id="v-yr">......................</div>
-                        </div>
+                        <div class="field-row"><div class="field-label" style="width:70px">Faculty:</div><div class="field-value" id="v-fac">..........</div></div>
+                        <div class="field-row"><div class="field-label" style="width:110px">Year/Semester:</div><div class="field-value" id="v-yr">..........</div></div>
                     </div>
                 </div>
-
-                <div class="footer">
-                    <div class="signature-line">Applicant's Signature</div>
-                    <div class="signature-line">Authorized Seal</div>
-                </div>
-                
-                <p style="position: absolute; bottom: 5mm; left: 0; width: 100%; text-align: center; font-size: 10px; color: #999;">
-                   Design By: Ambika Adhikari | Morang, Nepal
-                </p>
+                <div class="footer"><div class="signature-line">Applicant's Signature</div><div class="signature-line">Authorized Seal</div></div>
             </div>
         </div>
     </div>
 
     <script>
-        function up(id, val) {
-            document.getElementById(id).innerText = val || (id === 'v-fno' ? '_________' : '........................');
+        function up(id, val) { 
+            document.getElementById(id).innerText = val || (id === 'v-fno' ? '_________' : '..........'); 
         }
 
-        // Logic to hide/show options based on Level
         function filterYear() {
             const level = document.getElementById('levelSelect').value;
             const yearSelect = document.getElementById('yearSelect');
-            const bachOptions = document.querySelectorAll('.opt-bach');
-            const mastOptions = document.querySelectorAll('.opt-mast');
-
-            // Reset selection and show/hide logic
-            yearSelect.value = "";
-            up('v-yr', ""); // Clear preview text
-
-            bachOptions.forEach(opt => {
-                opt.style.display = (level === "Bachelor") ? "block" : "none";
-            });
-
-            mastOptions.forEach(opt => {
-                opt.style.display = (level === "Master") ? "block" : "none";
-            });
+            yearSelect.value = ""; 
+            up('v-yr', "");
+            document.querySelectorAll('.opt-bach').forEach(o => o.style.display = (level === "Bachelor") ? "block" : "none");
+            document.querySelectorAll('.opt-mast').forEach(o => o.style.display = (level === "Master") ? "block" : "none");
         }
 
         function loadImg(e) {
-            const frame = document.getElementById('v-frame');
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = () => frame.innerHTML = `<img src="${reader.result}">`;
+                reader.onload = () => document.getElementById('v-frame').innerHTML = `<img src="${reader.result}">`;
                 reader.readAsDataURL(file);
             }
         }
 
-        function exportA4(type) {
-            const element = document.getElementById('a4-page');
-            const nameElement = document.getElementById('v-name');
-            const rawName = nameElement.innerText.replace(/\./g, '').trim();
-            const fileName = rawName || 'Record';
-            
-            const opt = {
-                margin: 0,
-                filename: `Admission_${fileName}.${type === 'pdf' ? 'pdf' : 'jpg'}`,
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 3, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        function saveData() {
+            const data = {
+                fno: document.getElementById('v-fno').innerText,
+                date: document.getElementById('input-date').value,
+                name: document.getElementById('v-name').innerText,
+                gender: document.getElementById('v-gender').innerText,
+                padd: document.getElementById('v-padd').innerText,
+                tadd: document.getElementById('v-tadd').innerText,
+                email: document.getElementById('v-email').innerText,
+                phone: document.getElementById('v-phone').innerText,
+                lvl: document.getElementById('v-lvl').innerText,
+                fac: document.getElementById('v-fac').innerText,
+                yr: document.getElementById('v-yr').innerText
             };
 
-            if (type === 'pdf') {
-                html2pdf().set(opt).from(element).save();
-            } else {
-                html2pdf().set(opt).from(element).outputImg().then(img => {
-                    const link = document.createElement('a');
-                    link.href = img.src;
-                    link.download = `Admission_${fileName}.jpg`;
-                    link.click();
-                });
-            }
+            if(data.name.includes('...')) { alert("Please fill the name!"); return; }
+
+            fetch('save.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(res.status === "success") alert("Data Saved Successfully!");
+                else alert("Error: " + res.message);
+            })
+            .catch(e => alert("Database Connection Error. Make sure you are running on a server!"));
+        }
+
+        function exportA4(type) {
+            const element = document.getElementById('a4-page');
+            const opt = { margin: 0, filename: 'Enrollment.pdf', image: { type: 'jpeg', quality: 1 }, html2canvas: { scale: 3 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+            if (type === 'pdf') html2pdf().set(opt).from(element).save();
+            else html2pdf().set(opt).from(element).outputImg().then(img => {
+                const a = document.createElement('a'); a.href = img.src; a.download = 'Enrollment.jpg'; a.click();
+            });
         }
     </script>
 </body>
